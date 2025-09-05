@@ -1,8 +1,10 @@
+import BackBtn from './BackBtn';
 import Comments from './Comments';
 
-export default function Article({ article }) {
+export default function Article({ article, isPage = false }) {
   return (
-    <div className="max-w-4xl mx-auto ">
+    <div className="max-w-4xl mx-auto relative ">
+      {isPage && <BackBtn />}
       <img
         src={article.image}
         alt={article.title}
