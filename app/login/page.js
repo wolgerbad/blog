@@ -1,14 +1,22 @@
-import { login } from '../_lib/actions';
+import { auth } from '@/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import LoginForm from './LoginForm';
 
-export default function Login() {
+export default async function Login() {
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  console.log('login session:', session);
+
+  if (session?.user) {
+    redirect('/panel');
+  }
+
   return (
-    <div className="text-center ">
-      <h1 className="mb-4">Press the button below to Sign In with Google!</h1>
-      <form action={login}>
-        <button className="bg-black/60 p-4 text-white font-bold rounded-md">
-          🔐 Sign in with Google!
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="max-w-md w-full mx-4">
+        <LoginForm />
+      </div>
     </div>
   );
 }
