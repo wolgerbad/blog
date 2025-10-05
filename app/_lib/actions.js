@@ -1,15 +1,51 @@
 'use server';
 
-import { signIn, signOut } from '@/auth';
-import { updatePost } from './helpers';
+import { auth } from '@/auth';
+import { deletePost, updatePost } from './helpers';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-// import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
+import supabase, { supabaseUrl } from './supabase';
 
-export async function login() {
-  await signIn('google', {
-    redirectTo: '/panel',
+export async function signUp(name, email, password) {
+  const result = await auth.api.signUpEmail({
+    body: {
+      name,
+      email,
+      password,
+      callbackURL: 'http://localhost:3000/panel',
+    },
   });
+
+  revalidatePath('/');
+
+  return result;
+}
+
+export async function signIn(email, password) {
+  console.log(email, password);
+
+  try {
+    const result = await auth.api.signInEmail({
+      body: {
+        email,
+        password,
+        callbackURL: 'http://localhost:3000/panel',
+      },
+      headers: await headers(),
+    });
+
+    revalidatePath('/');
+    return result;
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+export async function signOut() {
+  await auth.api.signOut({ headers: await headers() });
+  revalidatePath('/');
+  redirect('/login');
 }
 
 export async function update(formData) {
@@ -32,8 +68,25 @@ export async function update(formData) {
   revalidatePath('/panel');
 }
 
-export async function logout() {
-  await signOut({
-    redirectTo: '/',
-  });
+export async function postComment(id, name, comment) {
+  let { data: posts, err } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('id', id);
+
+  const comments = posts.at(0).comments;
+
+  const { data, error } = await supabase
+    .from('posts')
+    .update({ comments: [...comments, { id: Date.now(), name, comment }] })
+    .eq('id', id)
+    .select();
+
+  revalidatePath('/');
+}
+
+export async function deleteArticle(id) {
+  deletePost(id);
+
+  revalidatePath('/panel');
 }

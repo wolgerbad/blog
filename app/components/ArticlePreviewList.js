@@ -1,18 +1,26 @@
+'use client';
+
 import Link from 'next/link';
 import ArticlePreviewItem from './ArticlePreviewItem';
+import { updateUser } from '../_lib/actions';
 
 export default function ArticlePreviewList({ posts }) {
   return (
-    <div className="max-w-[20rem] relative">
-      <Link
-        href="/articles"
-        className="absolute cursor-pointer -top-8 right-0 underline text-blue-600"
-      >
-        Other articles...
-      </Link>
-      {posts.map((post) => (
-        <ArticlePreviewItem key={post.id} post={post} />
-      ))}
+    <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gray-900">Latest Articles</h2>
+        <Link
+          href="/articles"
+          className="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors duration-200"
+        >
+          View All →
+        </Link>
+      </div>
+      <div className="space-y-4">
+        {posts.map((post) => (
+          <ArticlePreviewItem key={post.id} post={post} />
+        ))}
+      </div>
     </div>
   );
 }

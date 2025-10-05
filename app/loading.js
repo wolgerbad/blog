@@ -1,23 +1,13 @@
 export default function Loading() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '60vh',
-      }}
-    >
-      <div
-        style={{
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #3498db',
-          borderRadius: '50%',
-          width: '40px',
-          height: '40px',
-          animation: 'spin 1s linear infinite',
-        }}
-      ></div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="text-center">
+        <div className="relative">
+          <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin"></div>
+          <div className="absolute top-0 left-0 w-16 h-16 border-4 border-transparent border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+        <p className="mt-4 text-gray-600 font-medium">Loading...</p>
+      </div>
     </div>
   );
 }

@@ -1,22 +1,36 @@
+import { auth } from '@/auth';
 import BackBtn from './BackBtn';
 import Comments from './Comments';
+import { headers } from 'next/headers';
 
-export default function Article({ article, isPage = false }) {
+export default async function Article({ article, isPage = false }) {
+  const session = await auth.api.getSession({ headers: await headers() });
   return (
-    <div className="max-w-4xl mx-auto relative ">
+    <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
       {isPage && <BackBtn />}
-      <img
-        src={article.image}
-        alt={article.title}
-        className="w-full max-h-96 object-cover mb-10 rounded-lg"
-      />
+      <div className="relative">
+        <img
+          src={article.image}
+          alt={article.title}
+          className="w-full h-64 sm:h-80 object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+      </div>
 
-      <h1 className="text-center mb-6 text-3xl">{article.title}</h1>
-      <p className="text-lg text-gray-700 leading-relaxed mb-4">
-        {article.article} {article.article}
-      </p>
+      <div className="p-6 sm:p-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">
+          {article.title}
+        </h1>
+        <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
+          <p className="mb-4 text-lg">
+            {article.article} {article.article}
+          </p>
+        </div>
 
-      <Comments article={article} />
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <Comments session={session} post={article} />
+        </div>
+      </div>
     </div>
   );
 }
