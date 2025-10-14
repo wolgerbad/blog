@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import ArticlePreviewItem from './ArticlePreviewItem';
-import { updateUser } from '../_lib/actions';
 
 export default function ArticlePreviewList({ posts }) {
   return (

@@ -1,20 +1,10 @@
 'use client';
 
-import { createPost } from '@/app/_lib/helpers';
+import { createNewPost } from '@/app/_lib/actions';
+
 import Button from '@/app/components/Button';
 
 export default function CreateClient() {
-  async function handleCreate(formData) {
-    const title = formData.get('title');
-    const article = formData.get('article');
-    const image = formData.get('image');
-    console.log(image);
-    const comments = [];
-    const post = { title, article, image, comments };
-
-    await createPost(post);
-  }
-
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -25,7 +15,7 @@ export default function CreateClient() {
           <p className="text-gray-600">Share your thoughts with the world</p>
         </div>
 
-        <form action={handleCreate} className="space-y-6">
+        <form action={createNewPost} className="space-y-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Article Title

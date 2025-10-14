@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import supabase, { supabaseUrl } from './supabase';
+import { revalidatePath } from 'next/cache';
 
 export async function getPosts() {
   let { data: posts, error } = await supabase.from('posts').select('*');
@@ -46,7 +47,6 @@ export async function updatePost(id, post) {
 
 export async function createPost(post) {
   const imageName = post.image.name.replaceAll('/', '');
-  console.log(imageName);
 
   const imageUrl = `${supabaseUrl}/storage/v1/object/public/image%20bucket/${imageName}`;
 
@@ -70,6 +70,5 @@ export async function createPost(post) {
   }
 
   redirect('/panel');
-
   return data;
 }
