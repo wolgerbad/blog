@@ -2,7 +2,7 @@
 
 import { update } from '../_lib/actions';
 
-export default function Modal({ isOpen, onClose, post }) {
+export default function Modal({ onClose, post }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <form

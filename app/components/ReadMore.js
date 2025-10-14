@@ -1,6 +1,5 @@
 'use client';
 
-import { auth } from '@/auth';
 import Link from 'next/link';
 
 export default function ReadMore({ url }) {

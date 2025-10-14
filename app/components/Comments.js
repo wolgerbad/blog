@@ -60,7 +60,7 @@ export default function Comments({ post, session }) {
 
       {comments && comments.length > 0 ? (
         <div className="space-y-4">
-          {comments.map((comment, index) => (
+          {comments?.map((comment, index) => (
             <div
               key={index}
               className="bg-gray-50 rounded-lg p-4 border border-gray-200"

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { signIn, signUp } from '../_lib/actions';
+import { redirect } from 'next/navigation';
 
 export default function LoginForm() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -11,8 +12,11 @@ export default function LoginForm() {
     const email = formData.get('email');
     const password = formData.get('password');
     const result = await signIn(email, password);
-
     if (!result?.user) setError('Invalid username or password');
+    else {
+      setError('');
+      redirect('/');
+    }
   }
 
   async function handleSignUp(formData) {
@@ -21,6 +25,12 @@ export default function LoginForm() {
     const password = formData.get('password');
 
     const result = await signUp(name, email, password);
+
+    if (typeof result === 'string') setError(result);
+    else {
+      setError('');
+      redirect('/');
+    }
   }
 
   return (
@@ -96,6 +106,7 @@ export default function LoginForm() {
               placeholder="Enter your password"
             />
           </div>
+          {error && <p className="text-red-800">{error}</p>}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg"
@@ -156,6 +167,7 @@ export default function LoginForm() {
               placeholder="Create a password"
             />
           </div>
+          {error && <p className="text-red-800">{error}</p>}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg"

@@ -6,8 +6,6 @@ import LoginForm from './LoginForm';
 export default async function Login() {
   const session = await auth.api.getSession({ headers: await headers() });
 
-  console.log('login session:', session);
-
   if (session?.user) {
     redirect('/panel');
   }

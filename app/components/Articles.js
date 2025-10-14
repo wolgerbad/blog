@@ -1,4 +1,3 @@
-import { getPosts } from '../_lib/helpers';
 import Article from './Article';
 import ArticlePreviewList from './ArticlePreviewList';
 

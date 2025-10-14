@@ -8,34 +8,37 @@ import { headers } from 'next/headers';
 import supabase, { supabaseUrl } from './supabase';
 
 export async function signUp(name, email, password) {
-  const result = await auth.api.signUpEmail({
-    body: {
-      name,
-      email,
-      password,
-      callbackURL: 'http://localhost:3000/panel',
-    },
-  });
+  try {
+    const result = await auth.api.signUpEmail({
+      body: {
+        name,
+        email,
+        password,
+        callbackURL: '/',
+      },
+    });
+    revalidatePath('/');
+    revalidatePath('/login');
 
-  revalidatePath('/');
-
-  return result;
+    return result;
+  } catch (error) {
+    return error.message;
+  }
 }
 
 export async function signIn(email, password) {
-  console.log(email, password);
-
   try {
     const result = await auth.api.signInEmail({
       body: {
         email,
         password,
-        callbackURL: 'http://localhost:3000/panel',
+        callbackURL: '/',
       },
       headers: await headers(),
     });
 
     revalidatePath('/');
+    revalidatePath('/login');
     return result;
   } catch (error) {
     console.error(error.message);
@@ -89,4 +92,40 @@ export async function deleteArticle(id) {
   deletePost(id);
 
   revalidatePath('/panel');
+}
+
+export async function createNewPost(formData) {
+  const title = formData.get('title');
+  const article = formData.get('article');
+  const image = formData.get('image');
+
+  const comments = [];
+  const post = { title, article, image, comments };
+
+  const imageName = post.image.name.replaceAll('/', '');
+
+  const imageUrl = `${supabaseUrl}/storage/v1/object/public/image%20bucket/${imageName}`;
+
+  // https://rjmixcltcmxukccddxxt.supabase.co/storage/v1/object/
+  // public/image%20bucket/
+  // ChatGPT%20Image%20Aug%2030,%202025,%2001_11_56%20PM.png
+
+  const { data, error } = await supabase
+    .from('posts')
+    .insert([{ ...post, image: imageUrl }])
+    .select();
+
+  const { error: storageError } = await supabase.storage
+    .from('image%20bucket')
+    .upload(imageName, post.image);
+
+  if (storageError) await deletePost(data.id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath('/');
+  revalidatePath('/panel');
+  redirect('/panel');
 }

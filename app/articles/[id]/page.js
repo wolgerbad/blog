@@ -1,6 +1,8 @@
 import { getPost } from '@/app/_lib/helpers';
 import Article from '@/app/components/Article';
 
+export const revalidate = 10;
+
 export default async function ArticlePage({ params }) {
   const { id } = params;
   const post = await getPost(id);

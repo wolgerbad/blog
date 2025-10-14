@@ -3,6 +3,9 @@ import './globals.css';
 import Link from 'next/link';
 import { auth } from '@/auth';
 import { headers } from 'next/headers';
+import PrefetchRoutes from './components/PrefetchRoutes';
+import RouteLoader from './components/RouteLoader';
+import Image from 'next/image';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -22,6 +25,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const session = await auth.api.getSession({ headers: await headers() });
+  console.log(session);
 
   const userImage = session?.user?.image;
 
@@ -30,6 +34,8 @@ export default async function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen`}
       >
+        <RouteLoader />
+        <PrefetchRoutes />
         <nav className="bg-white/80 backdrop-blur-md shadow-lg border-b border-gray-200 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
@@ -37,6 +43,7 @@ export default async function RootLayout({ children }) {
                 <Link
                   href="/"
                   className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                  prefetch
                 >
                   Next Blog
                 </Link>
@@ -44,48 +51,40 @@ export default async function RootLayout({ children }) {
                   <Link
                     href="/"
                     className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium"
+                    prefetch
                   >
                     Home
                   </Link>
                   <Link
                     href="/about"
                     className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium"
+                    prefetch
                   >
                     About
                   </Link>
                   <Link
                     href="/articles"
                     className="text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium"
+                    prefetch
                   >
                     Articles
                   </Link>
                 </div>
               </div>
-              {session ? (
+              {session?.user ? (
                 <Link
                   className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg"
                   href="/panel"
+                  prefetch
                 >
-                  {userImage && (
-                    <img
-                      src={userImage}
-                      className="w-6 h-6 rounded-full border-2 border-white"
-                    />
-                  )}
                   <span className="font-medium">Admin Panel</span>
                 </Link>
               ) : (
                 <Link
                   className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg"
                   href="/login"
+                  prefetch
                 >
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z" />
-                  </svg>
                   <span className="font-medium">Login</span>
                 </Link>
               )}
