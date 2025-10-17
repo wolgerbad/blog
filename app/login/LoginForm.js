@@ -2,35 +2,36 @@
 
 import { useState } from 'react';
 import { signIn, signUp } from '../_lib/actions';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { useFormStatus } from 'react-dom';
 
 export default function LoginForm() {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [error, setError] = useState('');
+  const [signInError, setSignInError] = useState('');
+  const [signUpError, setSignUpError] = useState('');
+
+  const router = useRouter();
 
   async function handleSignIn(formData) {
+    setSignInError('');
     const email = formData.get('email');
     const password = formData.get('password');
     const result = await signIn(email, password);
-    if (!result?.user) setError('Invalid username or password');
-    else {
-      setError('');
-      redirect('/');
-    }
+
+    if (typeof result === 'string') setSignInError(result);
+    else router.refresh();
   }
 
   async function handleSignUp(formData) {
+    setSignUpError('');
     const name = formData.get('name');
     const email = formData.get('email');
     const password = formData.get('password');
 
     const result = await signUp(name, email, password);
 
-    if (typeof result === 'string') setError(result);
-    else {
-      setError('');
-      redirect('/');
-    }
+    if (typeof result === 'string') setSignUpError(result);
+    else router.refresh();
   }
 
   return (
@@ -106,13 +107,8 @@ export default function LoginForm() {
               placeholder="Enter your password"
             />
           </div>
-          {error && <p className="text-red-800">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg"
-          >
-            Sign In
-          </button>
+          {signInError && <p className="text-red-800">{signInError}</p>}
+          <SignInButton />
         </form>
       )}
 
@@ -167,13 +163,8 @@ export default function LoginForm() {
               placeholder="Create a password"
             />
           </div>
-          {error && <p className="text-red-800">{error}</p>}
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg"
-          >
-            Create Account
-          </button>
+          {signUpError && <p className="text-red-800">{signUpError}</p>}
+          <SignUpButton />
         </form>
       )}
 
@@ -181,5 +172,38 @@ export default function LoginForm() {
         Secure authentication with email and password
       </p>
     </div>
+  );
+}
+
+function SignUpButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      className={`${
+        pending
+          ? 'bg-gray-500 cursor-not-allowed'
+          : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg'
+      } w-full  text-white font-semibold py-3 px-6 rounded-lg`}
+    >
+      {pending ? 'Creating Account...' : 'Create Account'}
+    </button>
+  );
+}
+
+function SignInButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      className={`${
+        pending
+          ? 'bg-gray-500 cursor-not-allowed'
+          : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg'
+      } w-full text-white font-semibold py-3 px-6 rounded-lg `}
+    >
+      {pending ? 'Signing in...' : 'Sign In'}
+    </button>
   );
 }

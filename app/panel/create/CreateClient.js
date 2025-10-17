@@ -1,10 +1,18 @@
 'use client';
 
 import { createNewPost } from '@/app/_lib/actions';
+import { useState } from 'react';
 
-import Button from '@/app/components/Button';
+import { useFormStatus } from 'react-dom';
 
 export default function CreateClient() {
+  const [error, setError] = useState('');
+
+  async function handleNewPost(formData) {
+    const postError = await createNewPost(formData);
+
+    postError ? setError(postError) : setError('');
+  }
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -15,7 +23,7 @@ export default function CreateClient() {
           <p className="text-gray-600">Share your thoughts with the world</p>
         </div>
 
-        <form action={createNewPost} className="space-y-6">
+        <form action={handleNewPost} className="space-y-6">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Article Title
@@ -35,6 +43,7 @@ export default function CreateClient() {
             </label>
             <textarea
               name="article"
+              minLength={100}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
               rows={12}
               placeholder="Write your article content here..."
@@ -58,11 +67,26 @@ export default function CreateClient() {
                 📷 Upload Image
               </label>
             </div>
-
-            <Button className="px-8 py-3">✨ Create Article</Button>
+            {error && <p className="text-red-800">{error}</p>}
+            <CreateArticleButton />
           </div>
         </form>
       </div>
     </div>
+  );
+}
+
+function CreateArticleButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className={`${
+        pending
+          ? 'bg-gray-400 cursor-not-allowed'
+          : 'transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-md hover:shadow-lg focus:ring-blue-500'
+      } rounded-lg font-medium px-8 py-3 text-white `}
+    >
+      {pending ? 'Creating Article...' : '✨ Create Article'}
+    </button>
   );
 }

@@ -1,15 +1,32 @@
 'use client';
 
+import { useFormStatus } from 'react-dom';
 import { update } from '../_lib/actions';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Modal({ onClose, post }) {
+  const [error, setError] = useState('');
+
+  const router = useRouter();
+
+  async function handleEdit(formData) {
+    setError('');
+    formData.set('comments', JSON.stringify(post?.comments ?? []));
+    const result = await update(formData);
+
+    if (typeof result === 'string') {
+      setError(result);
+    } else {
+      router.refresh();
+      onClose();
+    }
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <form
-        action={async (formData) => {
-          formData.set('comments', JSON.stringify(post?.comments ?? []));
-          await update(formData);
-        }}
+        action={handleEdit}
         className="bg-white p-6 rounded shadow-lg w-1/3"
       >
         <h2 className="text-xl mb-4">Title</h2>
@@ -35,13 +52,9 @@ export default function Modal({ onClose, post }) {
         <input type="hidden" name="id" value={post.id} />
         <input type="hidden" name="image" value={post.image} />
 
+        {error && <p className="text-red-500">{error}</p>}
         <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
-          >
-            Confirm
-          </button>
+          <EditButton />
           <button
             type="button"
             onClick={onClose}
@@ -52,5 +65,22 @@ export default function Modal({ onClose, post }) {
         </div>
       </form>
     </div>
+  );
+}
+
+function EditButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      className={`${
+        pending
+          ? 'bg-gray-400 cursor-not-allowed'
+          : 'bg-blue-500 hover:bg-blue-600'
+      }  text-white px-4 py-2 rounded mr-2 `}
+    >
+      {pending ? 'Confirming...' : 'Confirm'}
+    </button>
   );
 }

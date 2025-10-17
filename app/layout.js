@@ -97,8 +97,13 @@ export default async function RootLayout({ children }) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
               <p className="text-gray-600">
-                &copy; {new Date().getFullYear()} Modern Blog. All rights
-                reserved.
+                &copy; Next Blog | by{' '}
+                <a
+                  href="https://github.com/wolgerbad"
+                  className="hover:underline"
+                >
+                  Emir Işık
+                </a>
               </p>
               <p className="text-sm text-gray-500 mt-2">
                 Built with Next.js and Tailwind CSS

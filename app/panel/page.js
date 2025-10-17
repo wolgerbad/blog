@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { headers } from 'next/headers';
 import { signOut } from '../_lib/actions';
 import { redirect } from 'next/navigation';
+import LogOutForm from '../components/LogOutForm';
 
 export const revalidate = 360;
 
@@ -53,18 +54,11 @@ export default async function Panel() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/"
-                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
-              >
-                🏠 Go to Home
-              </Link>
-              <form action={signOut} className="inline">
-                <button className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 font-medium">
-                  🚪 Log out
-                </button>
-              </form>
+            <div className="">
+              <button className="px-6 py-2 rounded-lg font-medium bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-200 shadow-md hover:shadow-lg">
+                <Link href="/">🏠 Go to Home</Link>
+              </button>
+              <LogOutForm />
             </div>
           </div>
         </div>
@@ -108,13 +102,7 @@ export default async function Panel() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <form action={signOut}>
-            <button className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium">
-              🚪 Log out
-            </button>
-          </form>
-        </div>
+        <LogOutForm />
       </div>
     </div>
   );

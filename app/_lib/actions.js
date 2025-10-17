@@ -37,11 +37,9 @@ export async function signIn(email, password) {
       headers: await headers(),
     });
 
-    revalidatePath('/');
-    revalidatePath('/login');
     return result;
   } catch (error) {
-    console.error(error.message);
+    return error.message;
   }
 }
 
@@ -66,9 +64,21 @@ export async function update(formData) {
     comments,
     image,
   };
+  console.log('updatedposts:', updatedPost);
 
-  await updatePost(id, updatedPost);
-  revalidatePath('/panel');
+  const { data, error } = await supabase
+    .from('posts')
+    .update(updatedPost)
+    .eq('id', id);
+
+  if (error) {
+    return error.message;
+  }
+
+  revalidatePath('/');
+  revalidatePath('/articles');
+
+  return data;
 }
 
 export async function postComment(id, name, comment) {
@@ -86,10 +96,11 @@ export async function postComment(id, name, comment) {
     .select();
 
   revalidatePath('/');
+  revalidatePath('/articles');
 }
 
 export async function deleteArticle(id) {
-  deletePost(id);
+  await deletePost(id);
 
   revalidatePath('/panel');
 }
@@ -110,7 +121,7 @@ export async function createNewPost(formData) {
   // public/image%20bucket/
   // ChatGPT%20Image%20Aug%2030,%202025,%2001_11_56%20PM.png
 
-  const { data, error } = await supabase
+  const { data: postData, error: createError } = await supabase
     .from('posts')
     .insert([{ ...post, image: imageUrl }])
     .select();
@@ -119,10 +130,13 @@ export async function createNewPost(formData) {
     .from('image%20bucket')
     .upload(imageName, post.image);
 
-  if (storageError) await deletePost(data.id);
+  if (createError) {
+    return createError.message;
+  }
 
-  if (error) {
-    throw new Error(error.message);
+  if (storageError) {
+    await deletePost(postData[0].id);
+    return `${storageError.message} . Try changing the image name or go for different image`;
   }
 
   revalidatePath('/');
