@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Button from './Button';
 import Modal from './Modal';
 import { deleteArticle } from '../_lib/actions';
+import { useFormStatus } from 'react-dom';
 
 export default function TableList({ post }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,13 +37,9 @@ export default function TableList({ post }) {
             >
               ✏️ Edit
             </Button>
-            <Button
-              variant="danger"
-              className="px-3 py-1 text-xs"
-              onClick={() => deleteArticle(id)}
-            >
-              🗑️ Delete
-            </Button>
+            <form action={async () => await deleteArticle(id)}>
+              <DeleteButton />
+            </form>
           </div>
         </td>
       </tr>
@@ -50,5 +47,21 @@ export default function TableList({ post }) {
         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} post={post} />
       )}
     </>
+  );
+}
+
+function DeleteButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className={`${
+        pending
+          ? 'bg-gray-400 cursor-not-allowed'
+          : 'transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-red-500  hover:bg-red-600 focus:ring-red-500'
+      } rounded-lg font-medium text-white px-6 py-3 text-xs`}
+    >
+      {pending ? '🗑️ Deleting...' : '🗑️ Delete'}
+    </button>
   );
 }

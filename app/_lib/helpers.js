@@ -32,19 +32,6 @@ export async function deletePost(id) {
   }
 }
 
-export async function updatePost(id, post) {
-  const { data, error } = await supabase
-    .from('posts')
-    .update(post)
-    .eq('id', id);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}
-
 export async function createPost(post) {
   const imageName = post.image.name.replaceAll('/', '');
 
