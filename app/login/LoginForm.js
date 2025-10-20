@@ -19,7 +19,7 @@ export default function LoginForm() {
     const result = await signIn(email, password);
 
     if (typeof result === 'string') setSignInError(result);
-    else router.refresh();
+    else router.back();
   }
 
   async function handleSignUp(formData) {
