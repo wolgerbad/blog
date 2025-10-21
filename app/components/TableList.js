@@ -5,12 +5,27 @@ import Button from './Button';
 import Modal from './Modal';
 import { deleteArticle } from '../_lib/actions';
 import { useFormStatus } from 'react-dom';
+import { Bounce, toast, ToastContainer } from 'react-toastify';
 
 export default function TableList({ post }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { id, title, article } = post;
   const filteredArticle = article.slice(0, 50);
+
+  function errorNotify(errorMessage) {
+    return toast.error(errorMessage, {
+      position: 'top-center',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'light',
+      transition: Bounce,
+    });
+  }
 
   return (
     <>
@@ -37,7 +52,25 @@ export default function TableList({ post }) {
             >
               ✏️ Edit
             </Button>
-            <form action={async () => await deleteArticle(id)}>
+            <form
+              action={async () => {
+                const error = await deleteArticle(id);
+                if (error) errorNotify(error);
+              }}
+            >
+              <ToastContainer
+                position="top-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Bounce}
+              />
               <DeleteButton />
             </form>
           </div>

@@ -100,9 +100,15 @@ export async function postComment(id, name, comment) {
 }
 
 export async function deleteArticle(id) {
-  await deletePost(id);
+  try {
+    await deletePost(id);
 
-  revalidatePath('/panel');
+    revalidatePath('/');
+    revalidatePath('/articles');
+    revalidatePath('/panel');
+  } catch (error) {
+    return error.message;
+  }
 }
 
 export async function createNewPost(formData) {
