@@ -15,7 +15,7 @@ export default function ArticlePreviewList({ posts }) {
           View All →
         </Link>
       </div>
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         {posts.map((post) => (
           <ArticlePreviewItem key={post.id} post={post} />
         ))}

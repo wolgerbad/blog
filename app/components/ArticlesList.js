@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { getPosts } from '../_lib/helpers';
 import ReadMore from './ReadMore';
+import Link from 'next/link';
 
 export default async function ArticlesList() {
   const articles = await getPosts();
@@ -16,7 +17,8 @@ export default async function ArticlesList() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {articles.map((article) => (
-          <div
+          <Link
+            href={`/articles/${article.id}`}
             key={article.id}
             className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group"
           >
@@ -39,11 +41,13 @@ export default async function ArticlesList() {
                 {article.article.slice(0, 120)}...
               </p>
               <div className="flex items-center justify-between">
-                <ReadMore url={`/articles/${article.id}`} />
+                <span className="text-blue-600 hover:underline">
+                  read more...
+                </span>
                 <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
