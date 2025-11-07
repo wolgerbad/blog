@@ -1,4 +1,5 @@
 'use client';
+import { RiArrowGoBackFill } from 'react-icons/ri';
 
 function BackBtn() {
   return (
@@ -7,7 +8,7 @@ function BackBtn() {
       onClick={() => window.history.back()}
     >
       <span className="text-xl group-hover:-translate-x-1 transition-transform duration-200">
-        ←
+        <RiArrowGoBackFill />
       </span>
     </button>
   );

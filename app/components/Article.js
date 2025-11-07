@@ -7,7 +7,7 @@ import Image from 'next/image';
 export default async function Article({ article, isPage = false }) {
   const session = await auth.api.getSession({ headers: await headers() });
   return (
-    <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
+    <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300">
       {isPage && <BackBtn />}
       <div className="relative">
         <Image
