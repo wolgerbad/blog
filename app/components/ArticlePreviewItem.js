@@ -1,11 +1,12 @@
 import Image from 'next/image';
 import ReadMore from './ReadMore';
+import Link from 'next/link';
 
 export default function ArticlePreviewItem({ post }) {
   const article = post.article.slice(0, 80);
 
   return (
-    <div className="group cursor-pointer">
+    <Link href={`/articles/${post.id}`} className="group cursor-pointer">
       <div className="relative overflow-hidden rounded-lg mb-3">
         <Image
           src={post.image}
@@ -21,11 +22,11 @@ export default function ArticlePreviewItem({ post }) {
       </h3>
       <p className="text-gray-600 text-sm mb-3 line-clamp-2">{article}...</p>
       <div className="flex items-center justify-between">
-        <span className="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors duration-200">
-          <ReadMore url={`/articles/${post.id}`} />
+        <span className="text-blue-600 hover:text-blue-800 hover:underline font-medium text-sm transition-colors duration-200">
+          read more...
         </span>
         <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
       </div>
-    </div>
+    </Link>
   );
 }

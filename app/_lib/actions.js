@@ -64,7 +64,6 @@ export async function update(formData) {
     comments,
     image,
   };
-  console.log('updatedposts:', updatedPost);
 
   const { data, error } = await supabase
     .from('posts')
