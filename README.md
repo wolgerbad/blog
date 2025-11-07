@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next Blog [![Live Demo](https://img.shields.io/badge/-Live%20Demo-green?style=flat-square)](https://next-react-blogapp.vercel.app) [![Repo](https://img.shields.io/badge/-GitHub-black?style=flat-square&logo=github)](https://github.com/wolgerbad/blog)
 
-## Getting Started
+Full-stack blog platform with role-based authentication, PostgreSQL, and optimistic UI updates.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-000?logo=nextdotjs&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-0F172A?logo=tailwindcss&logoColor=06B6D4)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📖 Overview
+Next Blog is a platform where users can read and comment on posts, while only admins can publish new ones.  
+I built it to explore full-stack application structure, authentication flows, and client–database state synchronization.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+## ✨ Features
+- 🔐 Role-based authentication (admin, reader)
+- 📝 Create, edit, and delete posts
+- 💬 Comment system with optimistic UI updates
+- ⚡ Server-side rendering for performance
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 🧠 Technical Implementation
+Built with **Next.js** for frontend and server-side rendering, connected to a **PostgreSQL** database via **Prisma ORM**.  
+Authentication handled using **Better Auth**, and styling handled by **TailwindCSS**.  
+Deployed on **Vercel** with a custom API layer for protected CRUD operations.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## 🧩 Getting Started
+1. Clone the repo  
+   ```bash
+   git clone https://github.com/wolgerbad/blog
+2. Install dependencies
+   ```bash
+   npm install
+3. Run locally
+   ```bash
+   npm run dev
+
+## 🌍 Live Demo
+🔗 [Visit Live Site](https://next-react-blogapp.vercel.app/)
+
+---
+
+
+## 💡 What I Learned
+- Managing optimistic UI state with database  
+- Structuring backend logic in Next.js API routes  
+- Handling role-based permissions cleanly in SQL  
+- Creating reusable UI components with React.js
+
+---
+
+
+## 🛠️ Tech Stack
+**Frontend:** Next.js, TailwindCSS  
+**Backend:** Next.js API Routes  
+**Database:** PostgreSQL, Prisma  
+**Auth:** Better Auth  
+**Deployment:** Vercel
+
+---
+
+
+## 📬 Contact
+👤 **Emir Işık**  
+🌐 [Portfolio](https://emirisk.vercel.app)  
+💼 [LinkedIn](https://www.linkedin.com/in/emir-isik)  
+📧 emir.isikdev@gmail.com
