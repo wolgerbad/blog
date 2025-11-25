@@ -1,15 +1,21 @@
 'use client';
 
+import { useFormStatus } from 'react-dom';
 import { postComment } from '../_lib/actions';
+import { useRef } from 'react';
+import { format } from 'date-fns';
 
 export default function Comments({ post, session }) {
   const { id, title, comments } = post;
+
+  const formRef = useRef(null);
 
   async function handleComment(formData) {
     const name = formData.get('name');
     const comment = formData.get('comment');
 
     await postComment(id, name, comment);
+    formRef?.current.reset;
   }
 
   return (
@@ -25,7 +31,7 @@ export default function Comments({ post, session }) {
           <h3 className="text-lg font-semibold text-gray-900 mb-3">
             Leave a Comment
           </h3>
-          <form action={handleComment} className="space-y-3">
+          <form action={handleComment} className="space-y-3" ref={formRef}>
             <input
               type="text"
               name="name"
@@ -40,12 +46,7 @@ export default function Comments({ post, session }) {
               className="w-full px-3 py-2 border border-gray-300 rounded"
               required
             ></textarea>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Post Comment
-            </button>
+            <Button />
           </form>
         </div>
       ) : (
@@ -60,22 +61,30 @@ export default function Comments({ post, session }) {
 
       {comments && comments.length > 0 ? (
         <div className="space-y-4">
-          {comments?.map((comment, index) => (
-            <div
-              key={index}
-              className="bg-gray-50 rounded-lg p-4 border border-gray-200"
-            >
-              <div className="flex items-center mb-2">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                  A
-                </div>
-                <span className="ml-3 font-semibold text-gray-900">
-                  {comment.name}
+          {comments?.map((comment, index) => {
+            const date = format(comment.date, 'dd MMM yyy');
+            return (
+              <div
+                key={index}
+                className="relative bg-gray-50 rounded-lg p-4 border border-gray-200"
+              >
+                <span className="absolute top-4 right-4 text-gray-800 font-thin text-sm">
+                  {date}
                 </span>
+                <div className="flex items-center mb-2">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                    {comment.name.slice(0, 1)}
+                  </div>
+                  <span className="ml-3 font-semibold text-gray-900">
+                    {comment.name}
+                  </span>
+                </div>
+                <p className="text-gray-700 leading-relaxed">
+                  {comment.comment}
+                </p>
               </div>
-              <p className="text-gray-700 leading-relaxed">{comment.comment}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-8 bg-gray-50 rounded-lg border border-gray-200">
@@ -86,5 +95,20 @@ export default function Comments({ post, session }) {
         </div>
       )}
     </div>
+  );
+}
+
+function Button() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      className={`${
+        pending ? 'cursor-not-allowed' : ''
+      } bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600`}
+    >
+      {pending ? 'Posting..' : 'Post Comment'}
+    </button>
   );
 }

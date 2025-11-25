@@ -90,7 +90,12 @@ export async function postComment(id, name, comment) {
 
   const { data, error } = await supabase
     .from('posts')
-    .update({ comments: [...comments, { id: Date.now(), name, comment }] })
+    .update({
+      comments: [
+        ...comments,
+        { id: Date.now(), name, comment, date: Date.now() },
+      ],
+    })
     .eq('id', id)
     .select();
 
