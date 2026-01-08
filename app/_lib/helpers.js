@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import supabase, { supabaseUrl } from './supabase';
-import { revalidatePath } from 'next/cache';
 
 export async function getPosts() {
   let { data: posts, error } = await supabase.from('posts').select('*');

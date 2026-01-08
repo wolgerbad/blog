@@ -1,7 +1,24 @@
-import { getPost } from '@/app/_lib/helpers';
+import { getPost, getPosts } from '@/app/_lib/helpers';
 import Article from '@/app/components/Article';
 
 export const revalidate = 10;
+
+export async function generateMetadata(props) {
+  const id = props.params.id;
+  const post = await getPost(id);
+
+  return {
+    title: `Article: ${post.title}`,
+  };
+}
+
+export async function generateStaticParams() {
+  const posts = await getPosts();
+
+  return posts.map((post) => ({
+    id: String(post.id),
+  }));
+}
 
 export default async function ArticlePage({ params }) {
   const { id } = params;

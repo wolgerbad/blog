@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { createAuthClient } from 'better-auth/react';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -10,7 +11,13 @@ const navLinks = [
   { href: '/articles', label: 'Articles' },
 ];
 
-export default function Navbar({ session }) {
+// Create auth client once outside the component
+const authClient = createAuthClient();
+const { useSession } = authClient;
+
+export default function Navbar() {
+  const { data: session } = useSession();
+
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 

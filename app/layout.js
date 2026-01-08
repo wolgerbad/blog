@@ -1,7 +1,5 @@
 import localFont from 'next/font/local';
 import './globals.css';
-import { auth } from '@/auth';
-import { headers } from 'next/headers';
 import PrefetchRoutes from './components/PrefetchRoutes';
 import RouteLoader from './components/RouteLoader';
 import Navbar from './components/Navbar';
@@ -23,8 +21,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await auth.api.getSession({ headers: await headers() });
-
   return (
     <html lang="en">
       <body
@@ -32,7 +28,7 @@ export default async function RootLayout({ children }) {
       >
         <RouteLoader />
         <PrefetchRoutes />
-        <Navbar session={session} />
+        <Navbar />
         <main className="flex-grow">{children}</main>
 
         <footer className="bg-white/80 backdrop-blur-md border-t border-gray-200 mt-20">
