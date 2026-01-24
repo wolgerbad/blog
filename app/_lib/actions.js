@@ -6,8 +6,25 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import supabase, { supabaseUrl } from './supabase';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, '15 m'),
+  prefix: 'nextblog'
+})
 
 export async function signUp(name, email, password) {
+  const h = (await headers())
+
+  const ip = h.get('x-ip-token') ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+  "unknown";
+
+  const rl = await ratelimit.limit(ip)
+
+  if(!rl.success) return 'Too many attempts. Try again later'
+
   try {
     const result = await auth.api.signUpEmail({
       body: {
@@ -27,6 +44,15 @@ export async function signUp(name, email, password) {
 }
 
 export async function signIn(email, password) {
+  const h = (await headers())
+
+  const ip = h.get('x-ip-token') ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+  "unknown";
+
+  const rl = await ratelimit.limit(ip)
+
+  if(!rl.success) return 'Too many attempts. Try again later'
+  
   try {
     const result = await auth.api.signInEmail({
       body: {
